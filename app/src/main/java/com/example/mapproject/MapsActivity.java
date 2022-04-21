@@ -16,6 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.mapproject.databinding.ActivityMapsBinding;
+import com.google.android.gms.maps.model.PointOfInterest;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -53,6 +54,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(cilegon).title("Marker in Cilegon"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cilegon));
+        setMapLongClick(googleMap);
+        setPoiClick(googleMap);
     }
 
     @Override
@@ -85,5 +88,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    private void setMapLongClick(final GoogleMap map) {
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(@NonNull LatLng latLng) {
+                String snippet = "Lat : " + latLng.latitude + " Long : " + latLng.longitude;
+                map.addMarker(new MarkerOptions().position(latLng).title("Dropped pin").snippet(snippet));
+            }
+        });
+    }
+
+    private void setPoiClick(final GoogleMap map) {
+        map.setOnPoiClickListener(new GoogleMap.OnPoiClickListener() {
+            @Override
+            public void onPoiClick(@NonNull PointOfInterest pointOfInterest) {
+                map.addMarker(new MarkerOptions().position(pointOfInterest.latLng).title(pointOfInterest.name));
+            }
+        });
     }
 }
